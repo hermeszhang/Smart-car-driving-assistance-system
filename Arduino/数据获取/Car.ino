@@ -13,7 +13,7 @@
    4HC4051－－Arduino Uno
    VCC－－3.3V
    GND－－GND
-   Z  －－A5
+   Z  －－A4
    s0 －－8
    s1 －－9
    s2 －－10
