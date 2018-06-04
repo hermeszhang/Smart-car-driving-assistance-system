@@ -1,0 +1,51 @@
+/**
+ * 从txt文件中获取数据，返回数组
+ */
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class test_search {
+    public static void main(String[] args) {
+        ArrayList signal=getTxt("C:\\Users\\hey\\Desktop\\java_test.txt");
+        String[] ppg=new String[signal.size()];
+        double[] ppg_double=new double[ppg.length];
+        for(int i=0;i<signal.size();i++){
+            ppg[i]= (String) signal.get(i);
+        }
+        for(int i=0;i<ppg.length;i++){
+            ppg_double[i]=Double.parseDouble(ppg[i]);
+        }
+        for(int i=0;i<150;i++){
+            System.out.println(ppg_double[i]);
+        }
+        double min=650;
+        peak_research peak=new peak_research();
+        List peak_find=peak.findpeaks(ppg_double,min);
+        System.out.println(peak_find);
+
+
+
+    }
+    public static ArrayList<String> getTxt(String filepath){
+        try{
+            String temp = null;
+            File f = new File(filepath);
+            String adn="";
+            //指定读取编码用于读取中文
+            InputStreamReader read = new InputStreamReader(new FileInputStream(f),"UTF-8");
+            ArrayList<String> readList = new ArrayList<String>();
+            BufferedReader reader=new BufferedReader(read);
+            while((temp=reader.readLine())!=null &&!"".equals(temp)){
+                readList.add(temp);
+            }
+            read.close();
+            return readList;
+        }catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("error");
+            return null;
+        }
+    }
+}
