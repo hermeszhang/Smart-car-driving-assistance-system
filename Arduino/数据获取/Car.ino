@@ -56,7 +56,7 @@ void setup() {
   
   //lcd
   lcd.begin(16, 2);
-  lcd.print("Driver status：");
+  lcd.print("Driver status");
   
   //IMU1
   myIMU1.MPU9250SelfTest(myIMU1.SelfTest);
