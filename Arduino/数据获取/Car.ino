@@ -13,7 +13,7 @@
    4HC4051－－Arduino Uno
    VCC－－3.3V
    GND－－GND
-   Z  －－A5
+   Z  －－A4
    s0 －－8
    s1 －－9
    s2 －－10
@@ -40,7 +40,6 @@ int sv = 0;
 
 void setup() {
   Wire.begin();
-  TWBR = 12;  // 400 kbit/sec I2C speed
   Serial.begin(115200); // Initialize the serial port
 
   // Set up the select pins as outputs:
@@ -69,9 +68,9 @@ void setup() {
 
 void loop() {
   /*
-   * IMU1
+   * IMU1 只采集陀螺仪数据
    */
-  selectMuxPin(0);
+  selectMuxPin(1);
   if (myIMU1.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01)
   {  
     myIMU1.readGyroData(myIMU1.gyroCount);
@@ -89,15 +88,16 @@ void loop() {
     myIMU1.count = micros();
     if(SerialDebug)
     {
-      Serial.print("IMU1;"+String(myIMU1.count)+";"
-      +String(myIMU1.gx*3.1415926/180,5)+";"+String(myIMU1.gy*3.1415926/180,5)+";"+String(myIMU1.gz*3.1415926/180,5)+";"); 
+      //Serial.print("IMU1;"+String(myIMU1.count)+";"
+      //+String(myIMU1.gx*3.1415926/180,5)+";"+String(myIMU1.gy*3.1415926/180,5)+";"+String(myIMU1.gz*3.1415926/180,5)+";"); 
+      Serial.print(String((float)myIMU1.count/1000000,5)+";"+String(myIMU1.gx*3.1415926/180,5)+";"+String(myIMU1.gy*3.1415926/180,5)+";"+String(myIMU1.gz*3.1415926/180,5)+";"); 
     }
   }
 
   /**
-   * IMU 2
+   * IMU 2 进行PPG数据的校准  使用加速度传感器数据和陀螺仪数据
    */
-  selectMuxPin(1);
+  selectMuxPin(0);
   if (myIMU2.readByte(MPU9250_ADDRESS, INT_STATUS) & 0x01)
   {  
     myIMU2.readAccelData(myIMU2.accelCount);
@@ -120,8 +120,11 @@ void loop() {
   {
     if(SerialDebug)
     {
-      Serial.print("IMU2;"
-      +String(myIMU2.ax*9.8,5)+";"+String(myIMU2.ay*9.8,5)+";"+String(myIMU2.az*9.8,5)+";"
+      //Serial.print("IMU2;"
+      //+String(myIMU2.ax*9.8,5)+";"+String(myIMU2.ay*9.8,5)+";"+String(myIMU2.az*9.8,5)+";"
+      //+String(myIMU2.gx*3.1415926/180,5)+";"+String(myIMU2.gy*3.1415926/180,5)+";"+String(myIMU2.gz*3.1415926/180,5)+";"); 
+
+      Serial.print(String(myIMU2.ax*9.8,5)+";"+String(myIMU2.ay*9.8,5)+";"+String(myIMU2.az*9.8,5)+";"
       +String(myIMU2.gx*3.1415926/180,5)+";"+String(myIMU2.gy*3.1415926/180,5)+";"+String(myIMU2.gz*3.1415926/180,5)+";"); 
       }
   }
@@ -130,9 +133,10 @@ void loop() {
    * PPG
    */
    sv = analogRead(A0);
-   Serial.print("PPG;");
+   //Serial.print("PPG;");
+   
    Serial.println(sv);
-   delay(10);
+   //delay(10);
 }
 
 void selectMuxPin(byte pin)
@@ -145,3 +149,4 @@ void selectMuxPin(byte pin)
       digitalWrite(selectPins[i], LOW);
   }
 }
+
