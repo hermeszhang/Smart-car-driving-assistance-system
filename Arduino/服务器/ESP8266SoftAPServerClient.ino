@@ -1,3 +1,11 @@
+/**
+ * ESP8266设置AP
+ * @auther nick wang
+ * 
+ * 修改日志
+ * 
+ */
+
 #include <ESP8266WiFi.h>
 #define MAX_SRV_CLIENTS 3
 
