@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Car</string>
+    <string name="tips_ip">服务器ip:</string>
+    <string name="ip">192.168.4.1</string>
+    <string name="tips_host">服务器host:</string>
+    <string name="host">8266</string>
+    <string name="tips_receive">是否开始接收数据？</string>
+    <string name="tips_pressure_type">选择压力类型：</string>
+    <string name="tips_num_of_test">输入实验次数：</string>
+    <string name="save_file">保存文件</string>
+</resources>
