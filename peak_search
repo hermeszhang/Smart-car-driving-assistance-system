@@ -1,0 +1,89 @@
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * PPG signal peak search
+ */
+public class peak_research {
+    int numberLeft = 0;//偏移量
+    int number_windows = 1;//现在窗口是第几个窗口，程序开始时为1，只要出现一个波峰设置为2就可以了
+    boolean end_window; //标记数最后出现的情况是否是上升的情况
+    int lengthMoving = 50;//波峰和波峰之间的间隔
+    int NUMBER_WINDOWS = 150;
+    double k0 = -1;
+    public List<Double> findpeaks(double[] data,double minpeaks){
+        List<Double> peak = new ArrayList<>();
+        //对每一个点进行判断
+        for(int k=0+numberLeft; k<NUMBER_WINDOWS;k++){
+            if(k==0){
+                if(data[k]>data[k+1]&&data[k+1]<data[k+2]&&data[k]>minpeaks){//数据出现下降的趋势
+                    if(number_windows!=1){
+                        if(end_window){
+                            //前一个步伐后面数据是上升数据，进行标记
+                            peak.add((double) k);  //前一个窗口后面数据是上升数据，就把k点的数据值放到peak里面
+                            k=k+lengthMoving;
+                        }
+                    }
+                }
+            }
+            else if(k==1){
+                if(data[k]>data[k-1]&&data[k]>data[k+1]&&data[k+1]>data[k+2]&&data[k]>minpeaks){
+                    peak.add((double) k);
+                    k=k+lengthMoving;
+                }
+            }
+            else if(k==2){
+                if(data[k]>data[k-1]&&data[k]>data[k+1]&&data[k-1]>data[k-2]&&data[k]>minpeaks){
+                    peak.add((double) k);
+                    k=k+lengthMoving;
+                }
+            }
+            else if(k==data.length-1){//最后一个点出现了上升的趋势，设定为true
+                if(data[k]>data[k-1]&&data[k-1]>data[k-2]&&data[k]>minpeaks){
+                    end_window=true;
+                    break;
+                }
+                else {
+                    end_window=false;
+                    break;
+                }
+            }
+            else if(k==data.length-2){
+                if(data[k]>data[k-1]&&data[k]>data[k+1]&&data[k-1]>data[k-2]&&data[k]>minpeaks){
+                    peak.add((double) k);
+                    numberLeft=lengthMoving-2;
+                    break;
+                }
+            }
+            else if(k==data.length-3){
+                if(data[k]>data[k+1]&&data[k+1]>data[k+2]&&data[k]>data[k-1]&&data[k-1]>data[k-2]&&data[k]>minpeaks){
+                    peak.add((double) k);
+                    numberLeft = lengthMoving - 3;
+                    break;
+                }
+            }
+            else {
+                        if(data[k]>data[k+1]&&data[k-1]<data[k]&&data[k]>minpeaks){
+                    /*if(k0==-1){
+                        k0=k;
+                    }
+                    else {
+                        peak.add(k-k0);
+                        k0=k;
+                    }*/
+                            peak.add((double) k);
+                            if(k+lengthMoving >= data.length){
+                                numberLeft = k + lengthMoving - data.length;
+                                break;
+                            }
+                            else {
+                        k=k+lengthMoving;
+                    }
+                }
+            }
+            number_windows= 2 ;
+        }
+        return peak;
+    }
+
+}
